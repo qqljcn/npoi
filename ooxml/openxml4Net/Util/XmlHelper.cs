@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -213,7 +211,7 @@ namespace NPOI.OpenXml4Net.Util
         {
             XmlReaderSettings settings = new XmlReaderSettings();
             //Disable entity parsing (to aviod xmlbombs, External Entity Attacks etc).
-            settings.DtdProcessing = DtdProcessing.Prohibit;
+			settings.ProhibitDtd=true;
 
             XmlReader reader = XmlReader.Create(stream, settings);
             xmlDoc.Load(reader);
