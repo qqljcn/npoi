@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using NPOI.OpenXml4Net.Util;
 
 namespace NPOI.OpenXmlFormats.Spreadsheet
 {
@@ -28,6 +29,35 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
             this.rPhField = o.rPhField;
             this.phoneticPrField = o.phoneticPrField;
         }
+      
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "t", this.t);
+            XmlHelper.WriteAttribute(sw, "XmlText", this.XmlText);
+            sw.Write(">");
+            if (this.phoneticPr != null)
+                this.phoneticPr.Write(sw, "phoneticPr");
+            if (this.r != null)
+            {
+                foreach (CT_RElt x in this.r)
+                {
+                    x.Write(sw, "r");
+                }
+            }
+            if (this.rPh != null)
+            {
+                foreach (CT_PhoneticRun x in this.rPh)
+                {
+                    x.Write(sw, "rPh");
+                }
+            }
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
 
         #region t
         public bool IsSetT()

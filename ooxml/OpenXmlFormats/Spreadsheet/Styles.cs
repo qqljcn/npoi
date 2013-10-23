@@ -843,6 +843,26 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
 
         private string valField;
 
+        public static CT_FontName Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_FontName ctObj = new CT_FontName();
+            ctObj.val = XmlHelper.ReadString(node.Attributes["val"]);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "val", this.val);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
         [XmlAttribute]
         public string val
         {

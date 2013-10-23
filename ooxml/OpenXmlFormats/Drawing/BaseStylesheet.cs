@@ -13,6 +13,10 @@ namespace NPOI.OpenXmlFormats.Dml
     using System.Xml.Schema;
     using System.ComponentModel;
     using System.Collections.Generic;
+    using System.Xml;
+    using NPOI.OpenXmlFormats.Spreadsheet;
+    using System.IO;
+    using NPOI.OpenXml4Net.Util;
 
 
     [Serializable]
@@ -631,12 +635,17 @@ namespace NPOI.OpenXmlFormats.Dml
 
         private string nameField;
 
+
         public CT_FontScheme()
         {
             this.extLstField = new CT_OfficeArtExtensionList();
             this.minorFontField = new CT_FontCollection();
             this.majorFontField = new CT_FontCollection();
         }
+
+     
+
+
 
         [XmlElement(Order = 0)]
         public CT_FontCollection majorFont
