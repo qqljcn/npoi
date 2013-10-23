@@ -201,7 +201,7 @@ namespace NPOI.OpenXml4Net.Util
             if (value == null)
                 return;
 
-            WriteAttribute(sw, attributeName, Convert.ToBase64String(value), false);
+            WriteAttribute(sw, attributeName, BitConverter.ToString(value).Replace("-", ""), false);
         }
         public static void WriteAttribute(StreamWriter sw, string attributeName, uint value)
         {
@@ -224,10 +224,15 @@ namespace NPOI.OpenXml4Net.Util
 
         public static byte[] ReadBytes(XmlAttribute attr)
         {
-            if (attr == null)
+            if (attr == null||string.IsNullOrEmpty(attr.Value))
                 return null;
 
-            return Convert.FromBase64String(attr.Value);
+            uint num = uint.Parse(attr.Value, System.Globalization.NumberStyles.AllowHexSpecifier);
+            byte[] temp = BitConverter.GetBytes(num);
+            if (attr.Value.Length / 2 == temp.Length)
+                return temp;
+
+            return NPOI.Util.Arrays.CopyOf(temp, attr.Value.Length / 2);
         }
     }
 }
