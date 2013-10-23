@@ -60,13 +60,13 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
             ctObj.thickBot = XmlHelper.ReadBool(node.Attributes["thickBot"]);
             ctObj.ph = XmlHelper.ReadBool(node.Attributes["ph"]);
             ctObj.c = new List<CT_Cell>();
-            //foreach (XmlNode childNode in node.ChildNodes)
-            //{
-            //    if (childNode.LocalName == "extLst")
-            //        ctObj.extLst = CT_ExtensionList.Parse(childNode, namespaceManager);
-            //    else if (childNode.LocalName == "c")
-            //        ctObj.c.Add(CT_Cell.Parse(childNode, namespaceManager));
-            //}
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode.LocalName == "extLst")
+                    ctObj.extLst = CT_ExtensionList.Parse(childNode, namespaceManager);
+                else if (childNode.LocalName == "c")
+                    ctObj.c.Add(CT_Cell.Parse(childNode, namespaceManager));
+            }
             return ctObj;
         }
 

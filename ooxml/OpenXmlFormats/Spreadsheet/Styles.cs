@@ -832,6 +832,28 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
                 this.valField = value;
             }
         }
+
+        public static CT_FontScheme Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_FontScheme ctObj = new CT_FontScheme();
+            if (node.Attributes["val"] != null)
+                ctObj.val = (ST_FontScheme)Enum.Parse(typeof(ST_FontScheme), node.Attributes["val"].Value);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "val", this.val.ToString());
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
     }
 
 
