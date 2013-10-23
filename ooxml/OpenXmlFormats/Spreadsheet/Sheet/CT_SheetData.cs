@@ -11,12 +11,45 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
     public class CT_SheetData
     {
 
+        public static CT_SheetData Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_SheetData ctObj = new CT_SheetData();
+            ctObj.row = new List<CT_Row>();
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode.LocalName == "row")
+                    ctObj.row.Add(CT_Row.Parse(childNode, namespaceManager));
+            }
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            sw.Write(">");
+            if (this.row != null)
+            {
+                foreach (CT_Row x in this.row)
+                {
+                    x.Write(sw, "row");
+                }
+            }
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
+
         private List<CT_Row> rowField = null; // [0..*] 
 
         //public CT_SheetData()
         //{
         //    this.rowField = new List<CT_Row>();
         //}
+
         public CT_Row AddNewRow()
         {
             if (null == rowField) { rowField = new List<CT_Row>(); }

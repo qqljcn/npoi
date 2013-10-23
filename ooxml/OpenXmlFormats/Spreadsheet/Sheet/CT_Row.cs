@@ -41,6 +41,64 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
 
         private bool? phField = null;
 
+        public static CT_Row Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_Row ctObj = new CT_Row();
+            ctObj.r = XmlHelper.ReadUInt(node.Attributes["r"]);
+            ctObj.spans = XmlHelper.ReadString(node.Attributes["spans"]);
+            ctObj.s = XmlHelper.ReadUInt(node.Attributes["s"]);
+            ctObj.customFormat = XmlHelper.ReadBool(node.Attributes["customFormat"]);
+            ctObj.hidden = XmlHelper.ReadBool(node.Attributes["hidden"]);
+            ctObj.customHeight = XmlHelper.ReadBool(node.Attributes["customHeight"]);
+            ctObj.collapsed = XmlHelper.ReadBool(node.Attributes["collapsed"]);
+            ctObj.thickTop = XmlHelper.ReadBool(node.Attributes["thickTop"]);
+            ctObj.thickBot = XmlHelper.ReadBool(node.Attributes["thickBot"]);
+            ctObj.ph = XmlHelper.ReadBool(node.Attributes["ph"]);
+            ctObj.c = new List<CT_Cell>();
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode.LocalName == "extLst")
+                    ctObj.extLst = CT_ExtensionList.Parse(childNode, namespaceManager);
+                else if (childNode.LocalName == "c")
+                    ctObj.c.Add(CT_Cell.Parse(childNode, namespaceManager));
+            }
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "r", this.r);
+            XmlHelper.WriteAttribute(sw, "spans", this.spans);
+            XmlHelper.WriteAttribute(sw, "s", this.s);
+            XmlHelper.WriteAttribute(sw, "customFormat", this.customFormat);
+            XmlHelper.WriteAttribute(sw, "ht", this.ht);
+            XmlHelper.WriteAttribute(sw, "hidden", this.hidden);
+            XmlHelper.WriteAttribute(sw, "customHeight", this.customHeight);
+            XmlHelper.WriteAttribute(sw, "outlineLevel", this.outlineLevel);
+            XmlHelper.WriteAttribute(sw, "collapsed", this.collapsed);
+            XmlHelper.WriteAttribute(sw, "thickTop", this.thickTop);
+            XmlHelper.WriteAttribute(sw, "thickBot", this.thickBot);
+            XmlHelper.WriteAttribute(sw, "ph", this.ph);
+            sw.Write(">");
+            if (this.extLst != null)
+                this.extLst.Write(sw, "extLst");
+            if (this.c != null)
+            {
+                foreach (CT_Cell x in this.c)
+                {
+                    x.Write(sw, "c");
+                }
+            }
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
+
         public void Set(CT_Row row)
         {
             cField = row.cField;

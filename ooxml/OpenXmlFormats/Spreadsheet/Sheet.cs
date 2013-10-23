@@ -15,6 +15,7 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
     using System.Xml.Schema;
     using System.Diagnostics;
     using System.Xml;
+    using NPOI.OpenXml4Net.Util;
 
     public enum ST_SmartTagShow
     {
@@ -135,6 +136,31 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
 
         private bool showOutlineSymbolsField;
 
+        public static CT_OutlinePr Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_OutlinePr ctObj = new CT_OutlinePr();
+            ctObj.applyStyles = XmlHelper.ReadBool(node.Attributes["applyStyles"]);
+            ctObj.summaryBelow = XmlHelper.ReadBool(node.Attributes["summaryBelow"]);
+            ctObj.summaryRight = XmlHelper.ReadBool(node.Attributes["summaryRight"]);
+            ctObj.showOutlineSymbols = XmlHelper.ReadBool(node.Attributes["showOutlineSymbols"]);
+            return ctObj;
+        }
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "applyStyles", this.applyStyles);
+            XmlHelper.WriteAttribute(sw, "summaryBelow", this.summaryBelow);
+            XmlHelper.WriteAttribute(sw, "summaryRight", this.summaryRight);
+            XmlHelper.WriteAttribute(sw, "showOutlineSymbols", this.showOutlineSymbols);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
         public CT_OutlinePr()
         {
             this.applyStylesField = false;
@@ -204,6 +230,28 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
         private bool autoPageBreaksField;
 
         private bool fitToPageField;
+
+        public static CT_PageSetUpPr Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_PageSetUpPr ctObj = new CT_PageSetUpPr();
+            ctObj.autoPageBreaks = XmlHelper.ReadBool(node.Attributes["autoPageBreaks"]);
+            ctObj.fitToPage = XmlHelper.ReadBool(node.Attributes["fitToPage"]);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "autoPageBreaks", this.autoPageBreaks);
+            XmlHelper.WriteAttribute(sw, "fitToPage", this.fitToPage);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
 
         public CT_PageSetUpPr()
         {
@@ -750,6 +798,35 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
             this.activePaneField = ST_Pane.topLeft;
             this.stateField = ST_PaneState.split;
         }
+
+        public static CT_Pane Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_Pane ctObj = new CT_Pane();
+            ctObj.topLeftCell = XmlHelper.ReadString(node.Attributes["topLeftCell"]);
+            if (node.Attributes["activePane"] != null)
+                ctObj.activePane = (ST_Pane)Enum.Parse(typeof(ST_Pane), node.Attributes["activePane"].Value);
+            if (node.Attributes["state"] != null)
+                ctObj.state = (ST_PaneState)Enum.Parse(typeof(ST_PaneState), node.Attributes["state"].Value);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "xSplit", this.xSplit);
+            XmlHelper.WriteAttribute(sw, "ySplit", this.ySplit);
+            XmlHelper.WriteAttribute(sw, "topLeftCell", this.topLeftCell);
+            XmlHelper.WriteAttribute(sw, "activePane", this.activePane.ToString());
+            XmlHelper.WriteAttribute(sw, "state", this.state.ToString());
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
         public bool IsSetTopLeftCell()
         {
             return this.topLeftCellField != null;
@@ -889,6 +966,36 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
             this.paneField = ST_Pane.topLeft;
             this.activeCellIdField = ((uint)(0));
         }
+
+
+
+        public static CT_Selection Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_Selection ctObj = new CT_Selection();
+            if (node.Attributes["pane"] != null)
+                ctObj.pane = (ST_Pane)Enum.Parse(typeof(ST_Pane), node.Attributes["pane"].Value);
+            ctObj.activeCell = XmlHelper.ReadString(node.Attributes["activeCell"]);
+            ctObj.activeCellId = XmlHelper.ReadUInt(node.Attributes["activeCellId"]);
+            ctObj.sqref = XmlHelper.ReadString(node.Attributes["sqref"]);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "pane", this.pane.ToString());
+            XmlHelper.WriteAttribute(sw, "activeCell", this.activeCell);
+            XmlHelper.WriteAttribute(sw, "activeCellId", this.activeCellId);
+            XmlHelper.WriteAttribute(sw, "sqref", this.sqref);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
 
         public void SetSqref(string[] array)
         {
@@ -2136,6 +2243,38 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
         {
             get { return null != this.outlineLevelColField; }
         }
+
+        public static CT_SheetFormatPr Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_SheetFormatPr ctObj = new CT_SheetFormatPr();
+            ctObj.baseColWidth = XmlHelper.ReadUInt(node.Attributes["baseColWidth"]);
+            ctObj.customHeight = XmlHelper.ReadBool(node.Attributes["customHeight"]);
+            ctObj.zeroHeight = XmlHelper.ReadBool(node.Attributes["zeroHeight"]);
+            ctObj.thickTop = XmlHelper.ReadBool(node.Attributes["thickTop"]);
+            ctObj.thickBottom = XmlHelper.ReadBool(node.Attributes["thickBottom"]);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "baseColWidth", this.baseColWidth);
+            XmlHelper.WriteAttribute(sw, "defaultColWidth", this.defaultColWidth);
+            XmlHelper.WriteAttribute(sw, "defaultRowHeight", this.defaultRowHeight);
+            XmlHelper.WriteAttribute(sw, "customHeight", this.customHeight);
+            XmlHelper.WriteAttribute(sw, "zeroHeight", this.zeroHeight);
+            XmlHelper.WriteAttribute(sw, "thickTop", this.thickTop);
+            XmlHelper.WriteAttribute(sw, "thickBottom", this.thickBottom);
+            XmlHelper.WriteAttribute(sw, "outlineLevelRow", this.outlineLevelRow);
+            XmlHelper.WriteAttribute(sw, "outlineLevelCol", this.outlineLevelCol);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
 
     }
 
@@ -4096,6 +4235,36 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
         private bool gridLinesField;
 
         private bool gridLinesSetField;
+
+
+        public static CT_PrintOptions Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_PrintOptions ctObj = new CT_PrintOptions();
+            ctObj.horizontalCentered = XmlHelper.ReadBool(node.Attributes["horizontalCentered"]);
+            ctObj.verticalCentered = XmlHelper.ReadBool(node.Attributes["verticalCentered"]);
+            ctObj.headings = XmlHelper.ReadBool(node.Attributes["headings"]);
+            ctObj.gridLines = XmlHelper.ReadBool(node.Attributes["gridLines"]);
+            ctObj.gridLinesSet = XmlHelper.ReadBool(node.Attributes["gridLinesSet"]);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "horizontalCentered", this.horizontalCentered);
+            XmlHelper.WriteAttribute(sw, "verticalCentered", this.verticalCentered);
+            XmlHelper.WriteAttribute(sw, "headings", this.headings);
+            XmlHelper.WriteAttribute(sw, "gridLines", this.gridLines);
+            XmlHelper.WriteAttribute(sw, "gridLinesSet", this.gridLinesSet);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
 
         public CT_PrintOptions()
         {
@@ -8469,11 +8638,46 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
     {
 
         private List<CT_Hyperlink> hyperlinkField = new List<CT_Hyperlink>(); // requiried
-
         //public CT_Hyperlinks()
         //{
         //    this.hyperlinkField = new List<CT_Hyperlink>();
         //}
+
+        public static CT_Hyperlinks Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_Hyperlinks ctObj = new CT_Hyperlinks();
+            ctObj.hyperlink = new List<CT_Hyperlink>();
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+                if (childNode.LocalName == "hyperlink")
+                    ctObj.hyperlink.Add(CT_Hyperlink.Parse(childNode, namespaceManager));
+            }
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            sw.Write(">");
+            if (this.hyperlink != null)
+            {
+                foreach (CT_Hyperlink x in this.hyperlink)
+                {
+                    x.Write(sw, "hyperlink");
+                }
+            }
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
+
+
+
+
         public void SetHyperlinkArray(CT_Hyperlink[] array)
         {
             hyperlinkField = new List<CT_Hyperlink>(array);

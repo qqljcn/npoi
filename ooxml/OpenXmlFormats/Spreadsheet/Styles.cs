@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using NPOI.OpenXml4Net.Util;
 
 namespace NPOI.OpenXmlFormats.Spreadsheet
 {
@@ -614,6 +615,32 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
         private uint themeField; // TODO change all the uses theme to use uint instead of signed integer variants
 
         private double tintField;
+        public static CT_Color Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_Color ctObj = new CT_Color();
+            ctObj.auto = XmlHelper.ReadBool(node.Attributes["auto"]);
+            ctObj.indexed = XmlHelper.ReadUInt(node.Attributes["indexed"]);
+            ctObj.rgb = XmlHelper.ReadBytes(node.Attributes["rgb"]);
+            ctObj.theme = XmlHelper.ReadUInt(node.Attributes["theme"]);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "auto", this.auto);
+            XmlHelper.WriteAttribute(sw, "indexed", this.indexed);
+            XmlHelper.WriteAttribute(sw, "rgb", this.rgb);
+            XmlHelper.WriteAttribute(sw, "theme", this.theme);
+            XmlHelper.WriteAttribute(sw, "tint", this.tint);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
 
         #region auto
         [XmlAttribute]
@@ -785,6 +812,7 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
 
     }
 
+
     [Serializable]
     [XmlType(Namespace = "http://schemas.openxmlformats.org/spreadsheetml/2006/main")]
     public class CT_FontScheme
@@ -834,6 +862,24 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
     public class CT_FontSize
     {
         private double valField;
+        public static CT_FontSize Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_FontSize ctObj = new CT_FontSize();
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "val", this.val);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
 
         [XmlAttribute]
         public double val
@@ -872,10 +918,34 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
 
         private ST_UnderlineValues? valField = null;
 
+
         public CT_UnderlineProperty()
         {
             this.valField = ST_UnderlineValues.single;
         }
+
+        public static CT_UnderlineProperty Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_UnderlineProperty ctObj = new CT_UnderlineProperty();
+            if (node.Attributes["val"] != null)
+                ctObj.val = (ST_UnderlineValues)Enum.Parse(typeof(ST_UnderlineValues), node.Attributes["val"].Value);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "val", this.val.ToString());
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
+
 
         [DefaultValue(ST_UnderlineValues.single)]
         [XmlAttribute]
@@ -937,6 +1007,27 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
                 this.valField = value;
             }
         }
+        public static CT_VerticalAlignFontProperty Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_VerticalAlignFontProperty ctObj = new CT_VerticalAlignFontProperty();
+            if (node.Attributes["val"] != null)
+                ctObj.val = (ST_VerticalAlignRun)Enum.Parse(typeof(ST_VerticalAlignRun), node.Attributes["val"].Value);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "val", this.val.ToString());
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
+
     }
 
     [Serializable]
@@ -964,6 +1055,25 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
         {
             this.valField = true;
         }
+        public static CT_BooleanProperty Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_BooleanProperty ctObj = new CT_BooleanProperty();
+            ctObj.val = XmlHelper.ReadBool(node.Attributes["val"]);
+            return ctObj;
+        }
+
+
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "val", this.val);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
+        }
+
 
         [DefaultValue(true)]
         [XmlAttribute]
@@ -1004,6 +1114,23 @@ namespace NPOI.OpenXmlFormats.Spreadsheet
             {
                 this.valField = value;
             }
+        }
+
+        public static CT_IntProperty Parse(XmlNode node, XmlNamespaceManager namespaceManager)
+        {
+            if (node == null)
+                return null;
+            CT_IntProperty ctObj = new CT_IntProperty();
+            ctObj.val = XmlHelper.ReadInt(node.Attributes["val"]);
+            return ctObj;
+        }
+
+        internal void Write(StreamWriter sw, string nodeName)
+        {
+            sw.Write(string.Format("<{0}", nodeName));
+            XmlHelper.WriteAttribute(sw, "val", this.val);
+            sw.Write(">");
+            sw.Write(string.Format("</{0}>", nodeName));
         }
     }
 
